@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prisma — Light Refined</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  
+  :root {
+    --glass-bg: rgba(255,255,255,0.08);
+    --glass-border: rgba(255,255,255,0.18);
+    --glass-blur: blur(20px);
+    --prism-1: #ff6ec4;
+    --prism-2: #7873f5;
+    --prism-3: #4adede;
+    --prism-4: #ffe259;
+    --prism-5: #a8ff78;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255,255,255,0.72);
+    --accent: #c8b6ff;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #0a0a14;
+    color: var(--text-primary);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── Custom Cursor ── */
+  #cursor {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--prism-1);
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, background 0.3s;
+    mix-blend-mode: screen;
+  }
+  #cursor-ring {
+    width: 38px; height: 38px;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.3s, height 0.3s;
+  }
+
+  /* ── Animated BG ── */
+  #bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── Prism blobs ── */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.55;
+    animation: blobFloat 12s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blob-1 { width: 520px; height: 520px; background: radial-gradient(circle, #ff6ec4, #7873f5); top: -120px; left: -120px; animation-delay: 0s; }
+  .blob-2 { width: 420px; height: 420px; background: radial-gradient(circle, #4adede, #a8ff78); bottom: -100px; right: -80px; animation-delay: -4s; }
+  .blob-3 { width: 300px; height: 300px; background: radial-gradient(circle, #ffe259, #ff6ec4); top: 45%; left: 40%; animation-delay: -8s; }
+  @keyframes blobFloat {
+    0%,100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(40px,-30px) scale(1.06); }
+    66% { transform: translate(-20px,40px) scale(0.96); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 56px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: padding 0.4s;
+  }
+  nav.scrolled { padding: 13px 56px; }
+  .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem; font-weight: 900;
+    background: linear-gradient(135deg, #ff6ec4, #c8b6ff, #4adede);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+  .nav-links { display: flex; align-items: center; gap: 10px; list-style: none; }
+  .nav-links li a {
+    font-size: 0.9rem; font-weight: 500;
+    color: rgba(255,255,255,0.78);
+    text-decoration: none; padding: 8px 16px; border-radius: 50px;
+    transition: color 0.25s, background 0.25s;
+    position: relative;
+  }
+  .nav-links li a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .nav-links li a.active { color: #fff; background: rgba(255,255,255,0.12); }
+  .btn-login {
+    background: linear-gradient(135deg, #ff6ec4, #7873f5);
+    color: #fff !important;
+    border-radius: 50px !important;
+    padding: 9px 22px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 0 22px rgba(120,115,245,0.45);
+    transition: box-shadow 0.3s, transform 0.2s !important;
+  }
+  .btn-login:hover { box-shadow: 0 0 36px rgba(255,110,196,0.6); transform: translateY(-1px) !important; background: rgba(255,255,255,0) !important; }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  #home {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 140px 32px 80px;
+  }
+  .hero-eyebrow {
+    font-size: 0.78rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--accent); font-weight: 500; margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.2rem, 9vw, 7.5rem);
+    font-weight: 900; line-height: 1.02;
+    background: linear-gradient(145deg, #fff 20%, #c8b6ff 55%, #ff6ec4 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0; animation: fadeUp 0.9s 0.5s forwards;
+    margin-bottom: 26px;
+  }
+  .hero-sub {
+    font-size: 1.15rem; color: rgba(255,255,255,0.62); max-width: 560px;
+    line-height: 1.75; font-weight: 300;
+    opacity: 0; animation: fadeUp 0.9s 0.7s forwards;
+    margin-bottom: 44px;
+  }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp 0.9s 0.9s forwards; }
+  .btn-primary {
+    padding: 14px 36px; border-radius: 50px; font-size: 0.95rem; font-weight: 600;
+    background: linear-gradient(135deg,#7873f5,#ff6ec4);
+    color: #fff; border: none; cursor: none;
+    box-shadow: 0 8px 32px rgba(120,115,245,0.4);
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  .btn-primary:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 44px rgba(255,110,196,0.5); }
+  .btn-outline {
+    padding: 13px 36px; border-radius: 50px; font-size: 0.95rem; font-weight: 500;
+    background: rgba(255,255,255,0.07); color: #fff;
+    border: 1px solid rgba(255,255,255,0.22); cursor: none;
+    backdrop-filter: blur(10px);
+    transition: background 0.25s, transform 0.2s;
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.14); transform: translateY(-3px); }
+
+  /* Hero floating glass cards */
+  .hero-cards {
+    display: flex; gap: 20px; margin-top: 72px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp 1s 1.1s forwards;
+  }
+  .mini-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.14);
+    backdrop-filter: blur(20px);
+    border-radius: 20px; padding: 22px 28px;
+    min-width: 150px; text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: cardFloat 5s ease-in-out infinite;
+  }
+  .mini-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(120,115,245,0.25); }
+  .mini-card:nth-child(2) { animation-delay: -1.5s; }
+  .mini-card:nth-child(3) { animation-delay: -3s; }
+  .mini-card .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    background: linear-gradient(135deg, #c8b6ff, #ff6ec4);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .mini-card p { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-top: 4px; }
+
+  @keyframes cardFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Hero video strip */
+  .hero-video-wrap {
+    width: 100%; max-width: 900px;
+    margin: 60px auto 0;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.14);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.55), 0 0 60px rgba(120,115,245,0.2);
+    position: relative;
+    opacity: 0; animation: fadeUp 1s 1.3s forwards;
+  }
+  .hero-video-wrap video {
+    width: 100%; display: block; border-radius: 28px;
+  }
+  .video-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(10,10,20,0.85));
+    border-radius: 28px;
+    display: flex; align-items: flex-end; padding: 28px;
+  }
+  .video-overlay span {
+    font-size: 0.82rem; color: rgba(255,255,255,0.6);
+    background: rgba(0,0,0,0.35); padding: 6px 14px; border-radius: 30px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    padding: 130px 6vw;
+    display: flex; flex-wrap: wrap; gap: 64px;
+    align-items: center;
+  }
+  .about-text { flex: 1; min-width: 280px; }
+  .section-label {
+    font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--prism-3); font-weight: 500; margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800;
+    line-height: 1.1; margin-bottom: 24px;
+  }
+  .section-title span {
+    background: linear-gradient(135deg, #c8b6ff, #4adede);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .about-text p { font-size: 1.02rem; color: rgba(255,255,255,0.62); line-height: 1.85; margin-bottom: 18px; font-weight: 300; }
+  .about-visual { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 20px; }
+  .glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-blur);
+    border-radius: 24px; padding: 32px;
+    transition: transform 0.35s, box-shadow 0.35s;
+  }
+  .glass-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 60px rgba(120,115,245,0.2); }
+  .glass-card h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
+  .glass-card p { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+  .card-icon { font-size: 1.8rem; margin-bottom: 14px; }
+
+  /* ── SERVICES ── */
+  #services { padding: 130px 6vw; }
+  .section-header { text-align: center; margin-bottom: 70px; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+  }
+  .service-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(22px);
+    border-radius: 28px;
+    padding: 40px 34px;
+    position: relative; overflow: hidden;
+    transition: transform 0.35s, box-shadow 0.35s;
+    cursor: none;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.04));
+    opacity: 0; transition: opacity 0.35s;
+    border-radius: 28px;
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-card:hover { transform: translateY(-10px); box-shadow: 0 24px 64px rgba(0,0,0,0.4); }
+  .service-icon {
+    width: 58px; height: 58px; border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; margin-bottom: 24px;
+  }
+  .service-card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 12px; }
+  .service-card p { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.75; }
+  .service-card .tag {
+    display: inline-block; margin-top: 20px;
+    font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 30px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* ── CONTACT ── */
+  #contact { padding: 130px 6vw; display: flex; flex-wrap: wrap; gap: 64px; align-items: flex-start; }
+  .contact-info { flex: 1; min-width: 280px; }
+  .contact-info p { color: rgba(255,255,255,0.6); line-height: 1.85; font-weight: 300; margin-bottom: 36px; }
+  .contact-detail {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+  }
+  .detail-icon {
+    width: 46px; height: 46px; border-radius: 14px;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13);
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    backdrop-filter: blur(10px);
+  }
+  .detail-text small { display: block; font-size: 0.73rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+  .detail-text span { font-size: 0.95rem; color: rgba(255,255,255,0.8); }
+
+  .contact-form-wrap { flex: 1; min-width: 280px; }
+  .form-glass {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.13);
+    backdrop-filter: blur(28px);
+    border-radius: 28px;
+    padding: 44px;
+  }
+  .form-row { display: flex; gap: 18px; flex-wrap: wrap; }
+  .form-group { flex: 1; min-width: 180px; margin-bottom: 22px; }
+  .form-group label { display: block; font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 14px;
+    padding: 13px 18px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    border-color: rgba(200,182,255,0.5);
+    box-shadow: 0 0 0 4px rgba(120,115,245,0.12);
+  }
+  .form-group textarea { resize: none; height: 120px; }
+  .btn-send {
+    width: 100%; padding: 15px; border: none;
+    border-radius: 16px; font-size: 1rem; font-weight: 600;
+    background: linear-gradient(135deg, #7873f5, #ff6ec4);
+    color: #fff; cursor: none;
+    box-shadow: 0 8px 30px rgba(120,115,245,0.35);
+    transition: transform 0.2s, box-shadow 0.3s;
+    font-family: 'Outfit', sans-serif;
+  }
+  .btn-send:hover { transform: translateY(-2px); box-shadow: 0 14px 44px rgba(255,110,196,0.4); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 48px 6vw;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 20px;
+    position: relative; z-index: 1;
+    background: rgba(0,0,0,0.25);
+    backdrop-filter: blur(12px);
+  }
+  footer .brand { font-size: 1.4rem; }
+  footer p { font-size: 0.84rem; color: rgba(255,255,255,0.38); }
+  .footer-socials { display: flex; gap: 14px; }
+  .social-btn {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; text-decoration: none;
+    color: rgba(255,255,255,0.65);
+    transition: background 0.25s, transform 0.2s;
+    cursor: none;
+  }
+  .social-btn:hover { background: rgba(120,115,245,0.25); transform: translateY(-2px); color: #fff; }
+
+  /* ── LOGIN PAGE ── */
+  #login-page {
+    position: fixed; inset: 0; z-index: 2000;
+    background: #0a0a14;
+    display: none; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.45s;
+  }
+  #login-page.visible { display: flex; }
+  #login-page.open { opacity: 1; }
+
+  .login-bg-blob-1 { position: absolute; width: 480px; height: 480px; background: radial-gradient(circle, #7873f5, #ff6ec4); border-radius: 50%; filter: blur(100px); opacity: 0.4; top: -100px; right: -100px; animation: blobFloat 10s ease-in-out infinite; }
+  .login-bg-blob-2 { position: absolute; width: 360px; height: 360px; background: radial-gradient(circle, #4adede, #a8ff78); border-radius: 50%; filter: blur(90px); opacity: 0.35; bottom: -80px; left: -60px; animation: blobFloat 14s ease-in-out infinite reverse; }
+
+  .auth-container {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(36px);
+    border-radius: 32px;
+    padding: 54px 50px;
+    width: 100%; max-width: 480px;
+    position: relative; z-index: 1;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+    transform: translateY(30px); transition: transform 0.5s;
+  }
+  #login-page.open .auth-container { transform: translateY(0); }
+
+  .close-btn {
+    position: absolute; top: 20px; right: 22px;
+    background: rgba(255,255,255,0.08); border: none; color: rgba(255,255,255,0.6);
+    width: 36px; height: 36px; border-radius: 10px; font-size: 1.1rem;
+    cursor: none; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .close-btn:hover { background: rgba(255,110,196,0.2); color: #fff; }
+
+  .auth-tabs { display: flex; gap: 6px; background: rgba(255,255,255,0.06); border-radius: 14px; padding: 5px; margin-bottom: 36px; }
+  .auth-tab {
+    flex: 1; padding: 10px; border: none; border-radius: 10px;
+    background: transparent; color: rgba(255,255,255,0.5);
+    font-size: 0.92rem; font-weight: 500; cursor: none;
+    font-family: 'Outfit', sans-serif;
+    transition: background 0.25s, color 0.25s;
+  }
+  .auth-tab.active { background: rgba(255,255,255,0.12); color: #fff; }
+
+  .auth-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
+  .auth-subtitle { font-size: 0.9rem; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
+
+  .auth-form { display: none; }
+  .auth-form.active { display: block; }
+
+  .auth-form .form-group { margin-bottom: 18px; }
+  .auth-form .form-group label { font-size: 0.78rem; color: rgba(255,255,255,0.5); display: block; margin-bottom: 7px; letter-spacing: 1px; text-transform: uppercase; }
+  .auth-form .form-group input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 13px;
+    padding: 13px 18px; color: #fff;
+    font-size: 0.95rem; font-family: 'Outfit', sans-serif; outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .auth-form .form-group input:focus {
+    border-color: rgba(200,182,255,0.55);
+    box-shadow: 0 0 0 4px rgba(120,115,245,0.14);
+  }
+  .forgot { display: block; text-align: right; font-size: 0.82rem; color: var(--accent); text-decoration: none; margin-bottom: 24px; }
+  .forgot:hover { color: #fff; }
+  .btn-auth {
+    width: 100%; padding: 14px; border: none; border-radius: 14px;
+    background: linear-gradient(135deg, #7873f5, #ff6ec4);
+    color: #fff; font-size: 1rem; font-weight: 600;
+    cursor: none; font-family: 'Outfit', sans-serif;
+    box-shadow: 0 8px 28px rgba(120,115,245,0.35);
+    transition: transform 0.2s, box-shadow 0.3s;
+    margin-bottom: 20px;
+  }
+  .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,110,196,0.4); }
+  .divider { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+  .divider span { font-size: 0.78rem; color: rgba(255,255,255,0.35); }
+  .social-auth { display: flex; gap: 12px; }
+  .social-auth-btn {
+    flex: 1; padding: 12px; border-radius: 13px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.11);
+    color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 500;
+    cursor: none; font-family: 'Outfit', sans-serif;
+    transition: background 0.25s, transform 0.2s;
+  }
+  .social-auth-btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); color: #fff; }
+
+  /* Prism refraction lines */
+  .prism-line {
+    position: fixed; pointer-events: none; z-index: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+    width: 100%; height: 1px;
+    animation: prismScan 8s linear infinite;
+  }
+  .prism-line:nth-child(2) { animation-delay: -2.5s; opacity: 0.6; }
+  .prism-line:nth-child(3) { animation-delay: -5s; opacity: 0.4; }
+  @keyframes prismScan {
+    from { top: -2px; }
+    to { top: 102vh; }
+  }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.75s, transform 0.75s; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media(max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav.scrolled { padding: 10px 24px; }
+    .nav-links { gap: 4px; }
+    .nav-links li a { padding: 6px 10px; font-size: 0.82rem; }
+    .btn-login { padding: 7px 14px !important; font-size: 0.82rem; }
+    #about, #contact { padding: 80px 6vw; }
+    #services { padding: 80px 6vw; }
+    .form-glass { padding: 30px 24px; }
+    .auth-container { padding: 38px 28px; margin: 16px; }
+  }
+
+  /* Light prism shimmer on glass cards */
+  .shimmer {
+    position: relative; overflow: hidden;
+  }
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -80%;
+    width: 60%; height: 200%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.07), transparent);
+    transform: skewX(-20deg);
+    animation: shimmerPass 6s ease-in-out infinite;
+  }
+  @keyframes shimmerPass {
+    0% { left: -80%; }
+    100% { left: 180%; }
+  }
+
+  /* image gallery strip */
+  .img-strip { display: flex; gap: 20px; margin-top: 28px; overflow-x: auto; padding-bottom: 8px; }
+  .img-strip::-webkit-scrollbar { height: 4px; }
+  .img-strip::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 2px; }
+  .img-strip::-webkit-scrollbar-thumb { background: rgba(120,115,245,0.4); border-radius: 2px; }
+  .img-thumb {
+    flex-shrink: 0;
+    width: 190px; height: 130px;
+    border-radius: 18px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+    position: relative;
+  }
+  .img-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+  .img-thumb:hover img { transform: scale(1.08); }
+  .img-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.4));
+    border-radius: 18px;
+  }
+
+  /* services colored accent */
+  .s1 .service-icon { background: linear-gradient(135deg, rgba(255,110,196,0.15), rgba(255,110,196,0.05)); }
+  .s2 .service-icon { background: linear-gradient(135deg, rgba(120,115,245,0.15), rgba(120,115,245,0.05)); }
+  .s3 .service-icon { background: linear-gradient(135deg, rgba(74,222,222,0.15), rgba(74,222,222,0.05)); }
+  .s4 .service-icon { background: linear-gradient(135deg, rgba(255,226,89,0.15), rgba(255,226,89,0.05)); }
+  .s5 .service-icon { background: linear-gradient(135deg, rgba(168,255,120,0.15), rgba(168,255,120,0.05)); }
+  .s6 .service-icon { background: linear-gradient(135deg, rgba(200,182,255,0.15), rgba(200,182,255,0.05)); }
+  .s1 { border-top: 2px solid rgba(255,110,196,0.35); }
+  .s2 { border-top: 2px solid rgba(120,115,245,0.35); }
+  .s3 { border-top: 2px solid rgba(74,222,222,0.35); }
+  .s4 { border-top: 2px solid rgba(255,226,89,0.35); }
+  .s5 { border-top: 2px solid rgba(168,255,120,0.35); }
+  .s6 { border-top: 2px solid rgba(200,182,255,0.35); }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- BG Blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- Prism lines -->
+<div class="prism-line"></div>
+<div class="prism-line"></div>
+<div class="prism-line"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="brand">✦ Prisma</div>
+  <ul class="nav-links">
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#" class="btn-login" id="open-login">Login / Sign Up</a></li>
+  </ul>
+</nav>
+
+<!-- ────────── HERO ────────── -->
+<section id="home">
+  <div class="hero-eyebrow">Welcome to the Future of Design</div>
+  <h1 class="hero-title">Light Refracts<br>Into Brilliance</h1>
+  <p class="hero-sub">We craft luminous digital experiences that bend perception, refract creativity, and illuminate possibilities you never imagined.</p>
+  <div class="hero-btns">
+    <button class="btn-primary">Explore Our Work</button>
+    <button class="btn-outline">Watch Reel ▶</button>
+  </div>
+
+  <div class="hero-cards">
+    <div class="mini-card shimmer">
+      <div class="num">240+</div>
+      <p>Projects Done</p>
+    </div>
+    <div class="mini-card shimmer">
+      <div class="num">98%</div>
+      <p>Client Satisfaction</p>
+    </div>
+    <div class="mini-card shimmer">
+      <div class="num">12yr</div>
+      <p>Experience</p>
+    </div>
+  </div>
+
+  <!-- Unsplash images strip -->
+  <div class="img-strip" style="max-width:900px;margin:40px auto 0;">
+    <div class="img-thumb"><img src="https://images.unsplash.com/photo-1636690424408-4330adc3e583?w=400&auto=format" alt="prism light"></div>
+    <div class="img-thumb"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&auto=format" alt="glass art"></div>
+    <div class="img-thumb"><img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&auto=format" alt="digital art"></div>
+    <div class="img-thumb"><img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&auto=format" alt="tech"></div>
+    <div class="img-thumb"><img src="https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?w=400&auto=format" alt="glow"></div>
+  </div>
+</section>
+
+<!-- ────────── ABOUT ────────── -->
+<section id="about">
+  <div class="about-text reveal">
+    <div class="section-label">Who We Are</div>
+    <h2 class="section-title">We Are Prism.<br><span>We Bend Light.</span></h2>
+    <p>Born from the intersection of art and technology, Prisma is a creative studio that transforms complex ideas into visually stunning digital experiences. Our team of designers, developers, and storytellers bring your vision to life.</p>
+    <p>Every project we touch carries a signature quality — the kind that stops you mid-scroll and makes you lean in closer. We don't just build websites; we build worlds.</p>
+    <button class="btn-primary" style="margin-top:16px">Meet the Team</button>
+  </div>
+  <div class="about-visual reveal">
+    <div class="glass-card shimmer">
+      <div class="card-icon">🎨</div>
+      <h4>Crafted Aesthetics</h4>
+      <p>Every pixel is intentional. Every gradient, purposeful. We obsess over the details that most people miss.</p>
+    </div>
+    <div class="glass-card shimmer">
+      <div class="card-icon">⚡</div>
+      <h4>Blazing Performance</h4>
+      <p>Beautiful doesn't have to mean slow. Our code is as clean and efficient as our designs are striking.</p>
+    </div>
+    <div class="glass-card shimmer">
+      <div class="card-icon">🌐</div>
+      <h4>Global Perspective</h4>
+      <p>Clients in 40+ countries trust us to communicate their brand across cultures and platforms.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── SERVICES ────────── -->
+<section id="services">
+  <div class="section-header reveal">
+    <div class="section-label">What We Offer</div>
+    <h2 class="section-title">Services That <span>Illuminate</span></h2>
+    <p style="color:rgba(255,255,255,0.5);max-width:520px;margin:0 auto;font-size:1rem;font-weight:300;line-height:1.8">From brand identity to immersive digital platforms — we cover the full spectrum of creative technology.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card s1 shimmer reveal">
+      <div class="service-icon">🎨</div>
+      <h3>Brand Identity</h3>
+      <p>We craft identities that resonate — from logo systems and colour palettes to full brand guidelines and tone of voice documentation.</p>
+      <span class="tag">Branding</span>
+    </div>
+    <div class="service-card s2 shimmer reveal">
+      <div class="service-icon">💻</div>
+      <h3>Web Development</h3>
+      <p>Performant, pixel-perfect websites and apps built with modern frameworks, always optimised for Core Web Vitals and accessibility.</p>
+      <span class="tag">Dev</span>
+    </div>
+    <div class="service-card s3 shimmer reveal">
+      <div class="service-icon">📱</div>
+      <h3>Mobile Design</h3>
+      <p>Intuitive iOS and Android experiences with micro-interactions and motion that feel natural, delightful, and on-brand.</p>
+      <span class="tag">Mobile</span>
+    </div>
+    <div class="service-card s4 shimmer reveal">
+      <div class="service-icon">✦</div>
+      <h3>Motion & 3D</h3>
+      <p>Bringing depth and life to your digital presence through cinematic animations, WebGL, and 3D environments.</p>
+      <span class="tag">Motion</span>
+    </div>
+    <div class="service-card s5 shimmer reveal">
+      <div class="service-icon">🔍</div>
+      <h3>UX Research</h3>
+      <p>Data-driven insights from user testing, heat-maps, and interviews that inform beautiful, functional design decisions.</p>
+      <span class="tag">Research</span>
+    </div>
+    <div class="service-card s6 shimmer reveal">
+      <div class="service-icon">🚀</div>
+      <h3>Growth Strategy</h3>
+      <p>From SEO architecture to conversion-rate optimisation — we make sure your digital investment delivers measurable results.</p>
+      <span class="tag">Strategy</span>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── CONTACT ────────── -->
+<section id="contact">
+  <div class="contact-info reveal">
+    <div class="section-label">Get In Touch</div>
+    <h2 class="section-title">Let's Build<br><span>Something Bright</span></h2>
+    <p>Have a project in mind? We'd love to hear about it. Drop us a message and our team will get back to you within 24 hours.</p>
+    <div class="contact-detail">
+      <div class="detail-icon">📍</div>
+      <div class="detail-text"><small>Location</small><span>Mumbai, Maharashtra, India</span></div>
+    </div>
+    <div class="contact-detail">
+      <div class="detail-icon">✉️</div>
+      <div class="detail-text"><small>Email</small><span>hello@prisma.studio</span></div>
+    </div>
+    <div class="contact-detail">
+      <div class="detail-icon">📞</div>
+      <div class="detail-text"><small>Phone</small><span>+91 98765 43210</span></div>
+    </div>
+  </div>
+  <div class="contact-form-wrap reveal">
+    <div class="form-glass">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:6px;">Send a Message</h3>
+      <p style="font-size:0.85rem;color:rgba(255,255,255,0.45);margin-bottom:28px;">We'll respond within 24 hours.</p>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" placeholder="Alex"></div>
+        <div class="form-group"><label>Last Name</label><input type="text" placeholder="Jordan"></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="alex@example.com"></div>
+      <div class="form-group"><label>Subject</label><input type="text" placeholder="Tell us briefly..."></div>
+      <div class="form-group"><label>Message</label><textarea placeholder="We'd love to hear your ideas..."></textarea></div>
+      <button class="btn-send" id="send-btn">Send Message ✦</button>
+    </div>
+  </div>
+</section>
+
+<!-- ────────── FOOTER ────────── -->
+<footer>
+  <div class="brand">✦ Prisma</div>
+  <p>© 2025 Prisma Studio. All rights reserved.</p>
+  <div class="footer-socials">
+    <a class="social-btn" href="#">𝕏</a>
+    <a class="social-btn" href="#">in</a>
+    <a class="social-btn" href="#">f</a>
+    <a class="social-btn" href="#">▶</a>
+  </div>
+</footer>
+
+<!-- ────────── LOGIN/SIGNUP PAGE ────────── -->
+<div id="login-page">
+  <div class="login-bg-blob-1"></div>
+  <div class="login-bg-blob-2"></div>
+  <div class="prism-line"></div>
+  <div class="prism-line"></div>
+  <div class="auth-container">
+    <button class="close-btn" id="close-login">✕</button>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">Login</button>
+      <button class="auth-tab" data-tab="signup">Sign Up</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form active" id="form-login">
+      <h2 class="auth-title">Welcome back</h2>
+      <p class="auth-subtitle">Sign in to your Prisma account</p>
+      <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@email.com"></div>
+      <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+      <a href="#" class="forgot">Forgot password?</a>
+      <button class="btn-auth">Sign In ✦</button>
+      <div class="divider"><span>or continue with</span></div>
+      <div class="social-auth">
+        <button class="social-auth-btn">G Google</button>
+        <button class="social-auth-btn">ƒ Facebook</button>
+        <button class="social-auth-btn">𝕏 Twitter</button>
+      </div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="auth-form" id="form-signup">
+      <h2 class="auth-title">Create account</h2>
+      <p class="auth-subtitle">Join Prisma and bend light with us</p>
+      <div style="display:flex;gap:14px;">
+        <div class="form-group" style="flex:1"><label>First Name</label><input type="text" placeholder="Alex"></div>
+        <div class="form-group" style="flex:1"><label>Last Name</label><input type="text" placeholder="Jordan"></div>
+      </div>
+      <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@email.com"></div>
+      <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
+      <div class="form-group"><label>Confirm Password</label><input type="password" placeholder="••••••••"></div>
+      <button class="btn-auth" style="margin-top:6px">Create Account ✦</button>
+      <div class="divider"><span>or sign up with</span></div>
+      <div class="social-auth">
+        <button class="social-auth-btn">G Google</button>
+        <button class="social-auth-btn">ƒ Facebook</button>
+        <button class="social-auth-btn">𝕏 Twitter</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── Custom Cursor ── */
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  (function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+
+  const hoverTargets = document.querySelectorAll('a, button, .glass-card, .service-card, .mini-card, .img-thumb, .social-btn');
+  hoverTargets.forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+      cursor.style.background = '#c8b6ff';
+      ring.style.width = '60px'; ring.style.height = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+      cursor.style.background = 'var(--prism-1)';
+      ring.style.width = '38px'; ring.style.height = '38px';
+    });
+  });
+
+  /* ── Nav scroll ── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+    updateActiveLink();
+  });
+
+  /* ── Active nav link ── */
+  function updateActiveLink() {
+    const sections = ['home','about','services','contact'];
+    const links = document.querySelectorAll('.nav-links li a:not(.btn-login)');
+    let current = 'home';
+    sections.forEach(id => {
+      const sec = document.getElementById(id);
+      if (sec && window.scrollY >= sec.offsetTop - 120) current = id;
+    });
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+  }
+
+  /* ── Smooth scroll ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    if (a.id === 'open-login') return;
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  /* ── Login / Sign Up page ── */
+  const loginPage = document.getElementById('login-page');
+  const openBtn = document.getElementById('open-login');
+  const closeBtn = document.getElementById('close-login');
+
+  function openLogin() {
+    loginPage.style.display = 'flex';
+    requestAnimationFrame(() => loginPage.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLogin() {
+    loginPage.classList.remove('open');
+    setTimeout(() => { loginPage.style.display = 'none'; document.body.style.overflow = ''; }, 450);
+  }
+
+  openBtn.addEventListener('click', e => { e.preventDefault(); openLogin(); });
+  closeBtn.addEventListener('click', closeLogin);
+  loginPage.addEventListener('click', e => { if (e.target === loginPage) closeLogin(); });
+
+  /* ── Auth tabs ── */
+  document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('form-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  /* ── Scroll Reveal ── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in-view'), i * 80);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObs.observe(el));
+
+  /* ── Tilt effect on service cards ── */
+  document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `translateY(-10px) rotateY(${x * 12}deg) rotateX(${-y * 8}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
+  /* ── Parallax blobs on mouse ── */
+  document.addEventListener('mousemove', e => {
+    const nx = (e.clientX / window.innerWidth - 0.5) * 30;
+    const ny = (e.clientY / window.innerHeight - 0.5) * 30;
+    document.querySelectorAll('.blob').forEach((b, i) => {
+      const f = (i + 1) * 0.6;
+      b.style.transform = `translate(${nx * f}px, ${ny * f}px)`;
+    });
+  });
+
+  /* ── Send button confetti ── */
+  document.getElementById('send-btn').addEventListener('click', function() {
+    this.textContent = '✓ Message Sent!';
+    this.style.background = 'linear-gradient(135deg, #a8ff78, #4adede)';
+    setTimeout(() => {
+      this.textContent = 'Send Message ✦';
+      this.style.background = '';
+    }, 2500);
+  });
+
+  /* ── Keyboard close ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLogin();
+  });
+</script>
+</body>
+</html>

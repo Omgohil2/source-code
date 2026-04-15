@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anirecom | Next-Gen Glassmorphism</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #020617; 
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- Glassmorphism Core --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-button {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .glass-button:hover::before {
+            left: 100%;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #a78bfa;
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
+            outline: none;
+        }
+
+        /* --- Scroll Progress Bar --- */
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(to right, #8b5cf6, #ec4899);
+            width: 0%;
+            z-index: 100;
+        }
+
+        /* --- Animated Orbs --- */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .orb-1 { width: 500px; height: 500px; background: #4f46e5; top: -10%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: #db2777; bottom: 10%; right: -5%; }
+        .orb-3 { width: 300px; height: 300px; background: #7c3aed; top: 40%; left: 40%; }
+
+        /* --- Reveal Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Hero Text Animation --- */
+        @keyframes titleReveal {
+            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        .animate-title { animation: titleReveal 1s ease forwards; }
+
+        .page-container { transition: opacity 0.6s ease; }
+        .hidden-page { display: none !important; opacity: 0; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="progress-bar"></div>
+
+    <!-- Parallax Background -->
+    <div id="orb-container">
+        <div class="orb orb-1" data-speed="0.05"></div>
+        <div class="orb orb-2" data-speed="-0.08"></div>
+        <div class="orb orb-3" data-speed="0.03"></div>
+    </div>
+
+    <!-- MAIN PAGE -->
+    <div id="main-page" class="page-container">
+        <nav class="fixed w-full z-50 transition-all duration-500" id="navbar">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12">
+                <div class="flex justify-between items-center h-24">
+                    <div class="flex-shrink-0 flex items-center cursor-pointer group" onclick="window.scrollTo(0,0)">
+                        <span class="text-2xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 group-hover:scale-105 transition-transform">
+                            Source Code AI
+                        </span>
+                    </div>
+
+                    <div class="hidden md:flex items-center space-x-10">
+                        <a href="#home" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Home</a>
+                        <a href="#about" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">About</a>
+                        <a href="#services" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Services</a>
+                        <a href="#contact" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Contact</a>
+                        
+                        <button onclick="showAuthPage()" class="glass-button px-7 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-white">
+                            Login
+                        </button>
+                    </div>
+
+                    <div class="md:hidden">
+                        <button id="mobile-menu-btn" class="glass-panel p-2 rounded-xl text-gray-300">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mobile-menu" class="hidden md:hidden glass-panel mx-4 rounded-2xl mt-2 overflow-hidden border border-white/10">
+                <div class="px-6 py-8 space-y-4 flex flex-col items-center">
+                    <a href="#home" class="text-lg text-gray-300">Home</a>
+                    <a href="#about" class="text-lg text-gray-300">About</a>
+                    <a href="#services" class="text-lg text-gray-300">Services</a>
+                    <a href="#contact" class="text-lg text-gray-300">Contact</a>
+                    <button onclick="showAuthPage()" class="w-full glass-button py-4 rounded-xl text-white font-bold mt-4">Login / Sign up</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="relative pt-64 pb-32 px-6 mx-auto max-w-7xl flex flex-col items-center justify-center text-center z-10">
+            <div class="glass-panel p-10 md:p-24 rounded-[3rem] max-w-5xl w-full border border-white/10 shadow-2xl animate-title">
+                <div class="inline-block px-4 py-1.5 mb-6 rounded-full glass-panel border-purple-500/30 text-[10px] uppercase tracking-[0.3em] font-bold text-purple-400">
+                    Next-Gen Experience
+                </div>
+                <h1 class="text-6xl md:text-8xl font-bold tracking-tighter mb-8 leading-[0.95]">
+                    Digital <span class="text-transparent bg-clip-text bg-gradient-to-br from-indigo-400 via-violet-400 to-fuchsia-400">Evolution</span>
+                </h1>
+                <p class="max-w-2xl text-lg md:text-xl text-gray-400 mx-auto mb-12 font-light leading-relaxed">
+                    Merging ethereal aesthetics with fluid functionality. Welcome to the workspace of the future.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                    <button class="glass-button bg-white/10 px-10 py-5 rounded-2xl text-lg font-semibold hover:shadow-indigo-500/10">Explore Now</button>
+                    <button class="glass-button px-10 py-5 rounded-2xl text-lg font-semibold">Our Portfolio</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- About Section -->
+        <section id="about" class="reveal relative py-32 px-6 mx-auto max-w-7xl z-10">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">Redefining <span class="text-indigo-400">Design</span></h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-fuchsia-500 mx-auto rounded-full"></div>
+            </div>
+            <div class="glass-panel p-10 md:p-16 rounded-[2.5rem] flex flex-col lg:flex-row gap-16 items-center">
+                <div class="flex-1 space-y-8">
+                    <h3 class="text-3xl font-semibold leading-snug">We don't just build websites; we craft digital atmospheres.</h3>
+                    <p class="text-gray-400 text-lg font-light leading-relaxed">
+                        At Source Code AI, our philosophy is simple: the interface should be invisible, yet beautiful. By leveraging glassmorphism and motion design, we create software that feels alive.
+                    </p>
+                    <div class="flex gap-4">
+                        <div class="glass-panel p-6 rounded-2xl flex-1 text-center">
+                            <span class="block text-3xl font-bold text-indigo-400">120+</span>
+                            <span class="text-xs uppercase tracking-widest text-gray-500">Clients</span>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl flex-1 text-center">
+                            <span class="block text-3xl font-bold text-fuchsia-400">95%</span>
+                            <span class="text-xs uppercase tracking-widest text-gray-500">Growth</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1 relative">
+                    <div class="glass-panel aspect-square rounded-[2rem] overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-fuchsia-500/20 group-hover:opacity-10 transition-opacity"></div>
+                        <div class="p-12 flex flex-col justify-center h-full">
+                            <div class="text-6xl mb-6">✨</div>
+                            <h4 class="text-2xl font-bold mb-4">Innovation First</h4>
+                            <p class="text-gray-400">Utilizing the latest tech stack to ensure your brand stays ahead of the curve.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="reveal relative py-32 px-6 mx-auto max-w-7xl z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+                <div class="text-left">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tight">Our <span class="text-fuchsia-400">Expertise</span></h2>
+                    <p class="text-gray-500 mt-4 max-w-md">Tailored solutions for businesses that demand aesthetic excellence.</p>
+                </div>
+                <button class="glass-button px-8 py-3 rounded-xl text-sm font-bold uppercase tracking-widest">View All Services</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="glass-panel p-10 rounded-[2rem] group hover:-translate-y-4 transition-all duration-500 border border-white/5">
+                    <div class="w-16 h-16 bg-indigo-500/10 rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:bg-indigo-500/20 transition-colors">
+                        <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">UI/UX Design</h3>
+                    <p class="text-gray-400 font-light">Crafting immersive user journeys that convert visitors into loyal advocates.</p>
+                </div>
+                <!-- Service 2 -->
+                <div class="glass-panel p-10 rounded-[2rem] group hover:-translate-y-4 transition-all duration-500 border border-white/5">
+                    <div class="w-16 h-16 bg-fuchsia-500/10 rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:bg-fuchsia-500/20 transition-colors">
+                        <svg class="w-8 h-8 text-fuchsia-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Development</h3>
+                    <p class="text-gray-400 font-light">High-performance codebases that are as clean as our designs.</p>
+                </div>
+                <!-- Service 3 -->
+                <div class="glass-panel p-10 rounded-[2rem] group hover:-translate-y-4 transition-all duration-500 border border-white/5">
+                    <div class="w-16 h-16 bg-blue-500/10 rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:bg-blue-500/20 transition-colors">
+                        <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Brand Strategy</h3>
+                    <p class="text-gray-400 font-light">Defining your unique voice in a crowded digital marketplace.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="reveal relative py-32 px-6 mx-auto max-w-7xl z-10">
+            <div class="glass-panel p-8 md:p-20 rounded-[3rem] border border-white/10 overflow-hidden relative">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[120px]"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                    <div>
+                        <h2 class="text-5xl font-bold mb-8 leading-tight">Let's build <br/>something <span class="text-indigo-400">epic</span>.</h2>
+                        <p class="text-gray-400 text-lg mb-12 font-light">Join the ranks of forward-thinking brands. Our inbox is always open for innovators.</p>
+                        <div class="space-y-6">
+                            <div class="flex items-center space-x-6">
+                                <div class="w-12 h-12 glass-panel rounded-2xl flex items-center justify-center">👋</div>
+                                <span class="text-gray-300 font-medium">hello@sourcecode.ai</span>
+                            </div>
+                            <div class="flex items-center space-x-6">
+                                <div class="w-12 h-12 glass-panel rounded-2xl flex items-center justify-center">🌐</div>
+                                <span class="text-gray-300 font-medium">Global Operations</span>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <input type="text" placeholder="Full Name" class="w-full glass-input p-5 rounded-2xl text-sm">
+                            <input type="email" placeholder="Email Address" class="w-full glass-input p-5 rounded-2xl text-sm">
+                        </div>
+                        <input type="text" placeholder="Subject" class="w-full glass-input p-5 rounded-2xl text-sm">
+                        <textarea placeholder="Tell us about your project" rows="5" class="w-full glass-input p-5 rounded-2xl text-sm"></textarea>
+                        <button type="submit" class="w-full glass-button py-5 rounded-2xl font-bold text-white uppercase tracking-widest shadow-xl shadow-indigo-500/10 hover:shadow-indigo-500/30">
+                            Ignite Discussion
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-20 text-center z-10 relative">
+            <div class="mb-8 font-bold text-2xl tracking-tighter text-white/20">source code ai</div>
+            <p class="text-gray-500 text-sm tracking-widest">&copy; 2026 SOURCE CODE AI ECOSYSTEM. ALL RIGHTS RESERVED.</p>
+        </footer>
+    </div>
+
+    <!-- AUTH PAGE -->
+    <div id="auth-page" class="hidden-page fixed inset-0 z-[100] flex items-center justify-center p-6">
+        <button onclick="hideAuthPage()" class="absolute top-10 left-10 flex items-center space-x-4 text-gray-400 hover:text-white transition-all group">
+            <div class="glass-panel p-3 rounded-2xl group-hover:bg-white/10">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </div>
+            <span class="font-bold uppercase tracking-widest text-xs">Return</span>
+        </button>
+
+        <div class="glass-panel p-12 md:p-16 rounded-[2.5rem] w-full max-w-lg border border-white/10 shadow-2xl relative animate-title">
+            <div class="text-center mb-12">
+                <span class="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 mb-6 block">Anirecom</span>
+                <h2 id="auth-title" class="text-4xl font-bold mb-3">Welcome Back</h2>
+                <p id="auth-subtitle" class="text-gray-500 font-light">Access your digital workspace</p>
+            </div>
+
+            <form class="space-y-5" onsubmit="event.preventDefault()">
+                <div id="signup-fields" class="hidden space-y-5">
+                    <input type="text" placeholder="Full Name" class="w-full glass-input p-5 rounded-2xl">
+                </div>
+                <input type="email" placeholder="Email Address" class="w-full glass-input p-5 rounded-2xl">
+                <input type="password" placeholder="Password" class="w-full glass-input p-5 rounded-2xl">
+                <button type="submit" class="w-full glass-button py-5 rounded-2xl font-bold text-white mt-4">
+                    Authenticate
+                </button>
+            </form>
+
+            <div class="mt-10 text-center">
+                <p id="auth-toggle-text" class="text-gray-500 text-sm">
+                    New to the ecosystem? 
+                    <button onclick="toggleAuthMode()" class="text-indigo-400 font-bold hover:text-indigo-300 transition-colors ml-1">Create Account</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const mainPage = document.getElementById('main-page');
+        const authPage = document.getElementById('auth-page');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const progressBar = document.getElementById('progress-bar');
+        const orbs = document.querySelectorAll('.orb');
+
+        // --- Mobile Menu ---
+        mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+        // --- Auth Page Handling ---
+        function showAuthPage() {
+            mainPage.classList.add('hidden-page');
+            authPage.classList.remove('hidden-page');
+            window.scrollTo(0,0);
+            if(!mobileMenu.classList.contains('hidden')) mobileMenu.classList.add('hidden');
+        }
+
+        function hideAuthPage() {
+            authPage.classList.add('hidden-page');
+            mainPage.classList.remove('hidden-page');
+        }
+
+        let isLogin = true;
+        function toggleAuthMode() {
+            isLogin = !isLogin;
+            const title = document.getElementById('auth-title');
+            const subtitle = document.getElementById('auth-subtitle');
+            const toggleText = document.getElementById('auth-toggle-text');
+            const signupFields = document.getElementById('signup-fields');
+
+            if (isLogin) {
+                title.innerText = "Welcome Back";
+                subtitle.innerText = "Access your digital workspace";
+                toggleText.innerHTML = `New to the ecosystem? <button onclick="toggleAuthMode()" class="text-indigo-400 font-bold hover:text-indigo-300 ml-1">Create Account</button>`;
+                signupFields.classList.add('hidden');
+            } else {
+                title.innerText = "Join Us";
+                subtitle.innerText = "Start your journey today";
+                toggleText.innerHTML = `Already registered? <button onclick="toggleAuthMode()" class="text-indigo-400 font-bold hover:text-indigo-300 ml-1">Login</button>`;
+                signupFields.classList.remove('hidden');
+            }
+        }
+
+        // --- Scroll & Reveal Logic ---
+        window.addEventListener('scroll', () => {
+            // Navbar Style
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('glass-panel', 'h-20');
+                nav.classList.remove('h-24');
+                nav.style.background = 'rgba(2, 6, 23, 0.8)';
+            } else {
+                nav.classList.remove('glass-panel', 'h-20');
+                nav.classList.add('h-24');
+                nav.style.background = 'transparent';
+            }
+
+            // Progress Bar
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
+
+        // Intersection Observer for Scroll Reveals
+        const revealCallback = (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        };
+
+        const revealObserver = new IntersectionObserver(revealCallback, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // --- Parallax Mouse Effect ---
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+
+            orbs.forEach(orb => {
+                const speed = parseFloat(orb.getAttribute('data-speed'));
+                const xOffset = (window.innerWidth / 2 - x) * speed;
+                const yOffset = (window.innerHeight / 2 - y) * speed;
+                orb.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
