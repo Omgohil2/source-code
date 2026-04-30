@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMGOHIL — Video Editor & Programmer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Film Grain Overlay -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- Animated Background -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="grid-lines"></div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ═══════════════════ NAVIGATION ═══════════════════ -->
+  <nav class="nav glass" id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-bracket">[</span>OM<span class="logo-accent">GOHIL</span><span class="logo-bracket">]</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#projects" class="nav-link">Work</a></li>
+        <li><a href="#youtube" class="nav-link">Channel</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" class="btn btn-sm nav-cta">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch Reels
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-tag reveal-up" data-delay="0">
+        <span class="tag-dot"></span>
+        Available for Projects
+      </div>
+      <h1 class="hero-title reveal-up" data-delay="100">
+        <span class="title-line">Video Editor</span>
+        <span class="title-line title-line--accent">&amp; Programmer</span>
+      </h1>
+      <p class="hero-sub reveal-up" data-delay="200">
+        Merging cinematic storytelling with clean code.<br />
+        Frames that breathe. Systems that scale.
+      </p>
+      <div class="hero-actions reveal-up" data-delay="300">
+        <a href="#projects" class="btn btn-primary">
+          <span>Explore Work</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#contact" class="btn btn-ghost">Let's Collaborate</a>
+      </div>
+      <div class="hero-stats reveal-up" data-delay="400">
+        <div class="stat-item glass-light">
+          <span class="stat-num">2+</span>
+          <span class="stat-label">Years Editing</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item glass-light">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Lines of Code</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item glass-light">
+          <span class="stat-num">1</span>
+          <span class="stat-label">Vision</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal-right" data-delay="200">
+      <div class="reel-frame glass">
+        <div class="reel-header">
+          <div class="reel-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="reel-label">SHOWREEL_2025.mp4</span>
+          <div class="reel-badge">LIVE</div>
+        </div>
+        <div class="reel-placeholder">
+          <!-- REPLACE THIS ENTIRE DIV with your YouTube embed:
+               <iframe width="100%" height="100%" src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+               frameborder="0" allowfullscreen></iframe>
+          -->
+          <div class="play-btn-wrap">
+            <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" class="play-btn" aria-label="Watch Showreel">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </a>
+          </div>
+          <p class="reel-hint">Click to watch on YouTube</p>
+        </div>
+        <div class="reel-footer">
+          <span>● REC</span>
+          <span>00:00:00</span>
+          <span>1080p / 60fps</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ ABOUT ═══════════════════ -->
+  <section class="section about-section" id="about">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-label">// Who I Am</span>
+        <h2 class="section-title">Dual Creative</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text reveal-up" data-delay="100">
+          <p class="about-lead">I exist at the intersection of two disciplines most treat as separate worlds — video production and software development.</p>
+          <p>Whether it's cutting a cinematic sequence with precise rhythm and emotion, or architecting a system that handles complex logic with elegance — the philosophy is the same: <em>every frame, every function, should serve the story.</em></p>
+          <div class="skill-chips">
+            <span class="chip">DaVinci Resolve</span>
+            <span class="chip">Python</span>
+            <span class="chip">JavaScript</span>
+            <span class="chip">Color Grading</span>
+            <span class="chip">Motion Graphics</span>
+          </div>
+        </div>
+        <div class="about-cards">
+          <div class="about-card glass reveal-up" data-delay="150">
+            <div class="card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+            </div>
+            <h3>Video Editing</h3>
+            <p>Cinematic cuts, color science, and storytelling that holds attention frame to frame.</p>
+          </div>
+          <div class="about-card glass reveal-up" data-delay="200">
+            <div class="card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+            </div>
+            <h3>Programming</h3>
+            <p>Clean, efficient code crafted with the same intentionality as a well-structured edit.</p>
+          </div>
+          <div class="about-card glass reveal-up" data-delay="250">
+            <div class="card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <h3>Content Strategy</h3>
+            <p>Building the ANIRECOM channel with content that educates, entertains, and earns loyalty.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PROJECTS ═══════════════════ -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-label">// Selected Work</span>
+        <h2 class="section-title">The Edits & The repositories</h2>
+      </div>
+
+      <div class="filter-bar reveal-up" data-delay="100">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="video">Video</button>
+        <button class="filter-btn" data-filter="code">Code</button>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+
+        <!-- VIDEO PROJECTS -->
+        <article class="project-card glass reveal-up" data-category="video" data-delay="100">
+          <div class="project-thumb">
+            <div class="thumb-overlay">
+              <!-- Replace with: <img src="thumbnail.jpg" alt="Project title"> -->
+              <div class="thumb-placeholder">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <span class="project-type video-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              Video
+            </span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Cinematic Short Film</h3>
+            <p class="project-desc">Color-graded narrative with motion titles and atmospheric sound design.</p>
+            <div class="project-tags">
+              <span>Cap-Cut</span><span>Color Grade</span><span>Sound Mix</span>
+            </div>
+            <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" class="project-link">
+              Watch <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card glass reveal-up" data-category="code" data-delay="150">
+          <div class="project-thumb">
+            <div class="thumb-overlay code-thumb">
+              <pre class="code-snippet"><code><span class="c-kw">const</span> <span class="c-fn">render</span> = () =&gt; {
+  <span class="c-kw">return</span> frames
+    .<span class="c-fn">filter</span>(f =&gt; f.<span class="c-prop">isKey</span>)
+    .<span class="c-fn">map</span>(interpolate);
+};</code></pre>
+            </div>
+            <span class="project-type code-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              Code
+            </span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Video Automation Tool</h3>
+            <p class="project-desc">Python script that batch-processes video files, auto-generates thumbnails, and exports metadata.</p>
+            <div class="project-tags">
+              <span>Python</span><span>FFmpeg</span><span>CLI</span>
+            </div>
+            <a href="https://github.com/Omgohil2/" target="_blank" rel="noopener" class="project-link">
+              View Repo <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card glass reveal-up" data-category="video" data-delay="200">
+          <div class="project-thumb">
+            <div class="thumb-overlay">
+              <div class="thumb-placeholder">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <span class="project-type video-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              Video
+            </span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Anime Edit Compilation</h3>
+            <p class="project-desc">High-energy AMV with sync cuts, VFX overlays, and custom transitions timed to music.</p>
+            <div class="project-tags">
+              <span>After Effects</span><span>AMV</span><span>VFX</span>
+            </div>
+            <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" class="project-link">
+              Watch <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card glass reveal-up" data-category="code" data-delay="250">
+          <div class="project-thumb">
+            <div class="thumb-overlay code-thumb">
+              <pre class="code-snippet"><code><span class="c-kw">async function</span> <span class="c-fn">fetchStats</span>() {
+  <span class="c-kw">const</span> data = <span class="c-kw">await</span>
+    api.<span class="c-fn">getChannel</span>({
+      id: <span class="c-str">'ANIRECOM'</span>
+    });
+  <span class="c-kw">return</span> data.<span class="c-prop">stats</span>;
+}</code></pre>
+            </div>
+            <span class="project-type code-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              Code
+            </span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">YouTube Analytics Dashboard</h3>
+            <p class="project-desc">React dashboard that pulls channel stats via the YouTube Data API and renders interactive charts.</p>
+            <div class="project-tags">
+              <span>React</span><span>YouTube API</span><span>Chart.js</span>
+            </div>
+            <a href="https://github.com/Omgohil2/" target="_blank" rel="noopener" class="project-link">
+              View Repo <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card glass reveal-up" data-category="video" data-delay="300">
+          <div class="project-thumb">
+            <div class="thumb-overlay">
+              <div class="thumb-placeholder">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <span class="project-type video-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              Video
+            </span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Branded Intro Pack</h3>
+            <p class="project-desc">Motion-graphics intro templates with modular design — logo reveals, kinetic type, and particle bursts.</p>
+            <div class="project-tags">
+              <span>After Effects</span><span>Motion</span><span>Branding</span>
+            </div>
+            <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" class="project-link">
+              Watch <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+        <article class="project-card glass reveal-up" data-category="code" data-delay="350">
+          <div class="project-thumb">
+            <div class="thumb-overlay code-thumb">
+              <pre class="code-snippet"><code><span class="c-comm">// Timeline engine</span>
+<span class="c-kw">class</span> <span class="c-fn">Timeline</span> {
+  <span class="c-fn">seek</span>(ms) {
+    <span class="c-kw">this</span>.<span class="c-prop">tracks</span>
+      .<span class="c-fn">forEach</span>(t =&gt;
+        t.<span class="c-fn">render</span>(ms));
+  }
+}</code></pre>
+            </div>
+            <span class="project-type code-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              Code
+            </span>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">Browser Timeline Editor</h3>
+            <p class="project-desc">Canvas-based timeline editor prototype built with Vanilla JS — drag clips, set keyframes, export JSON.</p>
+            <div class="project-tags">
+              <span>Canvas API</span><span>Vanilla JS</span><span>WebAudio</span>
+            </div>
+            <a href="https://github.com/Omgohil2/" target="_blank" rel="noopener" class="project-link">
+              View Repo <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ YOUTUBE STATS ═══════════════════ -->
+  <section class="section youtube-section" id="youtube">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-label">// The Channel</span>
+        <h2 class="section-title">ANIRECOM</h2>
+      </div>
+
+      <div class="yt-panel glass reveal-up" data-delay="100">
+        <div class="yt-panel-left">
+          <div class="yt-avatar">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </div>
+          <div class="yt-channel-info">
+            <h3 class="yt-name">ANIRECOM</h3>
+            <p class="yt-handle">@ANIRECOM</p>
+            <p class="yt-desc">Anime edits, cinematic content, and the occasional programming deep-dive. Where code meets the frame.</p>
+            <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" class="btn btn-yt">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              Subscribe
+            </a>
+          </div>
+        </div>
+
+        <div class="yt-stats-grid">
+          <div class="yt-stat glass-light reveal-up" data-delay="150">
+            <div class="yt-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </div>
+            <span class="yt-stat-num" data-target="0">110k</span>
+            <span class="yt-stat-label">Total Views</span>
+            <span class="yt-stat-note">Update with your real stat</span>
+          </div>
+          <div class="yt-stat glass-light reveal-up" data-delay="200">
+            <div class="yt-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <span class="yt-stat-num" data-target="0">380+</span>
+            <span class="yt-stat-label">Subscribers</span>
+            <span class="yt-stat-note">Update with your real stat</span>
+          </div>
+          <div class="yt-stat glass-light reveal-up" data-delay="250">
+            <div class="yt-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+            </div>
+            <span class="yt-stat-num">120+</span>
+            <span class="yt-stat-label">Videos</span>
+            <span class="yt-stat-note">Update with your real stat</span>
+          </div>
+          <div class="yt-stat glass-light reveal-up" data-delay="300">
+            <div class="yt-stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span class="yt-stat-num">★ 4.5</span>
+            <span class="yt-stat-label">Quality Score</span>
+            <span class="yt-stat-note">Self-assessed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Latest Videos Row -->
+      <div class="latest-videos-label reveal-up" data-delay="350">
+        <span>// Latest Uploads</span>
+      </div>
+      <div class="latest-videos reveal-up" data-delay="400">
+        <div class="video-thumb glass">
+          <!-- Replace with: <iframe src="https://www.youtube.com/embed/VIDEO_ID" ...></iframe> -->
+          <div class="video-placeholder">
+            <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" aria-label="Latest video 1">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </a>
+            <span>Latest Video 1</span>
+          </div>
+        </div>
+        <div class="video-thumb glass">
+          <div class="video-placeholder">
+            <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" aria-label="Latest video 2">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </a>
+            <span>Latest Video 2</span>
+          </div>
+        </div>
+        <div class="video-thumb glass">
+          <div class="video-placeholder">
+            <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" aria-label="Latest video 3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </a>
+            <span>Latest Video 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ SOCIAL LINKS ═══════════════════ -->
+  <section class="social-strip reveal-up">
+    <div class="container">
+      <div class="social-inner">
+        <span class="social-heading">Find me across the web</span>
+        <div class="social-links">
+          <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" class="social-btn glass" aria-label="YouTube">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <span>YouTube</span>
+          </a>
+          <a href="https://github.com/Omgohil2/" target="_blank" rel="noopener" class="social-btn glass" aria-label="GitHub">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a href="https://www.instagram.com/ani_recom" target="_blank" rel="noopener" class="social-btn glass" aria-label="Instagram">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            <span>Instagram</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CONTACT ═══════════════════ -->
+  <section class="section contact-section" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-left reveal-up">
+          <span class="section-label">// Let's Work</span>
+          <h2 class="section-title">Start a<br /><em>Conversation</em></h2>
+          <p class="contact-sub">Have a video project that needs a cinematic eye? A technical problem that needs an elegant solution? Or just want to say hi — my inbox is open.</p>
+          <div class="contact-info">
+            <div class="contact-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <span>Omgohil091@gmail.com</span>
+            </div>
+            <div class="contact-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Response within 24 hours</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form-wrap reveal-up" data-delay="150">
+          <form class="contact-form glass" id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Your name" required />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" placeholder="Video project / Collab / Just saying hi" />
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="5" placeholder="Tell me about your project, timeline, and what you're looking to achieve..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+              <span>Send Message</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+            <div class="form-success" id="formSuccess" aria-live="polite">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              Message sent! I'll be in touch soon.
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER ═══════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-bracket">[</span>OM<span class="logo-accent">GOHIL</span><span class="logo-bracket">]</span>
+          <p>Video Editor & Programmer</p>
+        </div>
+        <div class="footer-links">
+          <a href="#hero">Home</a>
+          <a href="#projects">Work</a>
+          <a href="#youtube">Channel</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="footer-socials">
+          <a href="https://www.youtube.com/@ANIRECOM" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <a href="https://github.com/Omgohil2/" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/ani_recom" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 OMGOHIL all rights reserved.</p>
+        <p class="dev-note">Built from scratch with HTML, CSS, and JavaScript. No frameworks, just pure code and a love for clean design.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
